@@ -48,19 +48,35 @@ def create_heroes():
     # database that belong together. In contrast to the engine that is one
     # for the whole application, we create a new session for each group of
     # operations with the database that belong together.
-    session = Session(engine)  # The session will create a new transaction
+    # session = Session(engine)  -> The session will create a new transaction
     # and execute all the SQL code in that transaction.
 
-    session.add(hero1)
-    session.add(hero2)
-    session.add(hero3)
+    #  session.add(hero1)
+    #  session.add(hero2)
+    #  session.add(hero3)
 
-    session.commit()  # commits the transactions to the database
+    #   "session.commit()" -> commits the transactions to the database
+    #   "session.close()" -> if an error happen betweem the add and the commit,
+    #   the session will not be closed and the database will be left in an
+    #   inconsistent state. To avoid this, we can use the with keyword with the commit fn
+
+    # this is the same as creating and closing the session manually, the with block
+    # will automatically create and close the session for us, even if an error happens
+    with Session(engine) as session:
+        session.add(hero1)
+        session.add(hero2)
+        session.add(hero3)
+
+        session.commit()
+
+
+def main():
+    create_db_and_tables()
+    create_heroes()
 
 
 # the purpose of this if statement is to have some code executed when this file
 # is called with "python filename.py" but not when it's called when another file
 # imports it
 if __name__ == "__main__":
-    create_db_and_tables()
-    create_heroes()
+    main()
